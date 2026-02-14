@@ -1,93 +1,151 @@
-'use client';
+import React from "react"
+import Image from "next/image"
+import { ArrowRight } from "lucide-react"
+import { Button } from "./ui/button"
+import { TextEffect } from "./ui/text-effect"
+import { AnimatedGroup } from "./ui/animated-group"
 
-import { motion, Variants } from 'framer-motion';
-import Link from 'next/link';
-import Image from 'next/image';
-
-interface HeroSectionProps {}
-
-const transitionVariants: Variants = {
-  hidden: { opacity: 0, filter: 'blur(4px)', y: 20 },
-  visible: {
-    opacity: 1,
-    filter: 'blur(0px)',
-    y: 0,
-    transition: {
-      type: 'spring', // ✅ "spring" or "tween"
-      bounce: 0.25,
-      duration: 0.5,
+const transitionVariants = {
+  item: {
+    hidden: {
+      opacity: 0,
+      filter: "blur(12px)",
+      y: 12,
+    },
+    visible: {
+      opacity: 1,
+      filter: "blur(0px)",
+      y: 0,
+      transition: {
+        type: "spring" as const,
+        bounce: 0.3,
+        duration: 1.5,
+      } as const,
     },
   },
-};
+}
 
-export const HeroSection: React.FC<HeroSectionProps> = () => {
+export default function HeroSection() {
+  const scrollToExplore = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    const section = document.getElementById("explore")
+    section?.scrollIntoView({ behavior: "smooth" })
+  }
+
   return (
-    <section className="relative bg-gray-100 min-h-screen flex flex-col justify-center items-center">
-      <div className="mx-auto max-w-7xl px-6 text-center">
-        {/* Hero Heading */}
-        <motion.h1
-          initial="hidden"
-          animate="visible"
-          variants={transitionVariants}
-          className="text-5xl font-bold mb-6"
-        >
-          Welcome to Start Page
-        </motion.h1>
+    <main className="relative scroll-smooth">
+      <div aria-hidden className="absolute inset-0 isolate hidden opacity-65 lg:block" />
 
-        {/* Subheading */}
-        <motion.p
-          initial="hidden"
-          animate="visible"
+      <section className="relative pt-24 md:pt-36 text-center">
+        {/* Background Image */}
+        <AnimatedGroup
           variants={{
-            hidden: { opacity: 0, y: 10 },
-            visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+            container: {
+              visible: {
+                transition: { delayChildren: 1 },
+              },
+            },
+            item: {
+              hidden: { opacity: 0, y: 20 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: {
+                  type: "spring" as const,
+                  bounce: 0.3,
+                  duration: 2,
+                },
+              },
+            },
           }}
-          className="text-xl mb-8"
-        >
-          Your awesome landing page powered by Next.js & Framer Motion
-        </motion.p>
-
-        {/* Buttons */}
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: { opacity: 0, y: 10 },
-            visible: { opacity: 1, y: 0, transition: { delay: 0.2, duration: 0.5 } },
-          }}
-          className="flex justify-center gap-4"
-        >
-          <Link href="#explore">
-            <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-              Start Exploring
-            </button>
-          </Link>
-          <Link href="#contact">
-            <button className="px-6 py-3 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition">
-              Contact Us
-            </button>
-          </Link>
-        </motion.div>
-
-        {/* Optional Image */}
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: { opacity: 0, y: 20 },
-            visible: { opacity: 1, y: 0, transition: { delay: 0.4, duration: 0.5 } },
-          }}
-          className="mt-12"
+          className="absolute inset-0 top-56 -z-20 mask-b-from-35% mask-b-to-90% lg:top-32"
         >
           <Image
-            src="/hero-image.png"
-            alt="Hero"
-            width={600}
-            height={400}
-            className="mx-auto rounded-lg shadow-lg"
+            src="https://ik.imagekit.io/lrigu76hy/tailark/night-background.jpg?updatedAt=1745733451120"
+            alt="background"
+            width={3276}
+            height={4095}
+            priority
+            className="hidden dark:block w-full h-full object-cover"
           />
-        </motion.div>
-      </div>
-    </section>
-  );
-};
+        </AnimatedGroup>
+
+        <div className="mx-auto max-w-7xl px-6">
+          {/* START EXPLORING */}
+          <AnimatedGroup variants={transitionVariants}>
+            <div className="relative z-10 mt-8">
+              <a
+                href="#explore"
+                onClick={scrollToExplore}
+                className="group mx-auto flex w-fit items-center gap-4 rounded-full border bg-muted p-1 pl-4 shadow-md transition-colors duration-300 hover:bg-background dark:border-t-white/5"
+              >
+                <span className="text-sm text-foreground">
+                  START EXPLORING
+                </span>
+                <span className="block h-4 w-0.5 border-l bg-white dark:bg-zinc-700" />
+                <div className="h-6 w-6 overflow-hidden rounded-full bg-background duration-500 group-hover:bg-muted">
+                  <div className="flex w-12 -translate-x-1/2 duration-500 ease-in-out group-hover:translate-x-0">
+                    <span className="flex h-6 w-6">
+                      <ArrowRight className="m-auto h-3 w-3" />
+                    </span>
+                    <span className="flex h-6 w-6">
+                      <ArrowRight className="m-auto h-3 w-3" />
+                    </span>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </AnimatedGroup>
+
+          {/* Hero title */}
+          <TextEffect
+            as="h1"
+            preset="fade-in-blur"
+            speedSegment={0.3}
+            className="mx-auto mt-8 max-w-4xl text-balance text-5xl font-extrabold tracking-tight md:text-7xl lg:mt-16 xl:text-[5.25rem]"
+          >
+            OSCAR ONDIS
+          </TextEffect>
+
+          {/* Subtitle */}
+          <TextEffect
+            as="p"
+            per="line"
+            preset="fade-in-blur"
+            speedSegment={0.3}
+            delay={0.5}
+            className="mx-auto mt-8 max-w-2xl text-balance text-lg"
+          >
+            A collection of academic and personal projects developed
+            throughout my IT studies, focusing on functionality,
+            efficiency, and real-world solutions.
+          </TextEffect>
+
+          {/* NEXT button */}
+          <AnimatedGroup
+            variants={{
+              container: {
+                visible: {
+                  transition: {
+                  staggerChildren: 0.05,
+                  delayChildren: 0.75,
+                },
+              },
+              },
+              ...transitionVariants,
+            }}
+            className="mt-12 flex flex-col items-center justify-center gap-2 md:flex-row"
+          >
+            <div className="rounded-[calc(var(--radius-xl)+0.125rem)] border bg-foreground/10 p-0.5">
+              <Button asChild size="lg" className="rounded-xl px-5">
+                <a href="#explore" onClick={scrollToExplore}>
+                  NEXT
+                </a>
+              </Button>
+            </div>
+          </AnimatedGroup>
+        </div>
+      </section>
+    </main>
+  )
+}
